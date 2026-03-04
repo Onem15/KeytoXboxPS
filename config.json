@@ -1,0 +1,53 @@
+{
+  "backend": "xinput",
+  "vjoy_device_id": 1,
+  "auto_select_device": true,
+  "button_count": 16,
+  "controller_profile": "xbox",
+  "ui_theme": "light",
+  "bindings": {
+    "axes": {
+      "left_stick_x": {
+        "negative": [],
+        "positive": []
+      },
+      "left_stick_y": {
+        "negative": [],
+        "positive": []
+      },
+      "right_stick_x": {
+        "negative": [],
+        "positive": []
+      },
+      "right_stick_y": {
+        "negative": [],
+        "positive": []
+      },
+      "left_trigger": {
+        "negative": [],
+        "positive": []
+      },
+      "right_trigger": {
+        "negative": [],
+        "positive": []
+      },
+      "slider_0": {
+        "negative": [],
+        "positive": []
+      },
+      "slider_1": {
+        "negative": [],
+        "positive": []
+      },
+      "wheel": {
+        "negative": [],
+        "positive": []
+      }
+    },
+    "buttons": {
+      "9": [
+        "mouse_middle"
+      ]
+    }
+  }
+}
