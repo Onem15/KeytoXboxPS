@@ -1,7 +1,8 @@
 param(
     [string]$Python = "python",
     [string]$PyInstaller = "pyinstaller",
-    [string]$Iscc = "iscc"
+    [string]$Iscc = "iscc",
+    [switch]$SkipDependencyInstall
 )
 
 $ErrorActionPreference = "Stop"
@@ -12,8 +13,10 @@ Set-Location $root
 Write-Host "Cleaning previous build output..."
 Remove-Item -Recurse -Force build, dist -ErrorAction SilentlyContinue
 
-Write-Host "Installing Python dependencies..."
-& $Python -m pip install -r requirements.txt pyinstaller
+if (-not $SkipDependencyInstall) {
+    Write-Host "Installing Python dependencies..."
+    & $Python -m pip install -r requirements.txt pyinstaller
+}
 
 Write-Host "Building application bundle..."
 & $PyInstaller --noconfirm --clean KeytoXboxPS.spec
