@@ -96,6 +96,26 @@ Outputs:
 - App bundle: `dist\KeytoXboxPS\`
 - Installer: `dist\installer\KeytoXboxPS-Setup.exe`
 
+## GitHub Release Automation
+
+This repo includes a GitHub Actions workflow at `.github/workflows/release.yml`.
+
+It runs on Windows when you push a tag like `v1.0.1` and will:
+
+- build the PyInstaller app bundle
+- build the Inno Setup installer
+- create `dist\KeytoXboxPS-portable.zip`
+- attach the installer and portable zip to the GitHub release
+
+Release flow:
+
+```powershell
+git tag v1.0.1
+git push origin v1.0.1
+```
+
+If the release draft is not created automatically yet, create the GitHub release for that tag and rerun the workflow or push a new tag.
+
 ## Windows Trust / SmartScreen
 
 An installer does **not** stop Windows from showing "unknown app" or "make sure you trust this app" prompts by itself.

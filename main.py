@@ -80,7 +80,7 @@ LIGHT_THEME_NAME = "flatly"
 DARK_THEME_NAME = "darkly"
 DARK_THEME_ACCENT = "#36B7BA"
 APP_NAME = "KeytoXboxPS"
-APP_VERSION = "1.0.0"
+APP_VERSION = "1.0.1"
 APP_USER_MODEL_ID = "KeytoXboxPS.App"
 
 DEFAULT_CONFIG: Dict[str, Any] = {
