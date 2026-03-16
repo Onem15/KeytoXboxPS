@@ -100,7 +100,7 @@ Outputs:
 
 This repo includes a GitHub Actions workflow at `.github/workflows/release.yml`.
 
-It runs on Windows when you push a tag like `v1.0.4` and will:
+It runs on Windows when you push a tag like `v1.0.5` and will:
 
 - build the PyInstaller app bundle
 - build the Inno Setup installer
@@ -110,8 +110,8 @@ It runs on Windows when you push a tag like `v1.0.4` and will:
 Release flow:
 
 ```powershell
-git tag v1.0.4
-git push origin v1.0.4
+git tag v1.0.5
+git push origin v1.0.5
 ```
 
 If the release draft is not created automatically yet, create the GitHub release for that tag and rerun the workflow or push a new tag.
