@@ -22,8 +22,14 @@ jobs:
         with:
           python-version: "3.9"
 
-      - name: Install Python dependencies
-        run: python -m pip install --upgrade pip setuptools wheel && python -m pip install -r requirements.txt pyinstaller
+      - name: Install Python tooling
+        run: python -m pip install --upgrade pip setuptools wheel pyinstaller
+
+      - name: Install app dependencies
+        run: python -m pip install pyvjoy>=1.0.1 pynput>=1.7.6 ttkbootstrap>=1.10.1
+
+      - name: Install vgamepad
+        run: python -m pip install --no-build-isolation vgamepad==0.1.0
 
       - name: Install Inno Setup
         run: choco install innosetup --no-progress -y
