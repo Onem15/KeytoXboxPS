@@ -100,21 +100,19 @@ Outputs:
 
 This repo includes a GitHub Actions workflow at `.github/workflows/release.yml`.
 
-It runs on Windows when you push a tag like `v1.0.7` and will:
-
-- build the PyInstaller app bundle
-- build the Inno Setup installer
-- create `dist\KeytoXboxPS-portable.zip`
-- attach the installer and portable zip to the GitHub release
+Automated Windows release builds are currently disabled because `vgamepad` is not installing reliably on GitHub-hosted Windows runners.
 
 Release flow:
 
 ```powershell
-git tag v1.0.7
-git push origin v1.0.7
+.\build-release.ps1
+Compress-Archive -Path .\dist\KeytoXboxPS\* -DestinationPath .\dist\KeytoXboxPS-portable.zip -Force
 ```
 
-If the release draft is not created automatically yet, create the GitHub release for that tag and rerun the workflow or push a new tag.
+Then create or edit the GitHub release and upload:
+
+- `dist\installer\KeytoXboxPS-Setup.exe`
+- `dist\KeytoXboxPS-portable.zip`
 
 ## Windows Trust / SmartScreen
 

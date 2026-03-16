@@ -1,60 +1,18 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - "v*"
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   build-release:
     runs-on: windows-latest
 
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.9"
-
-      - name: Install Python tooling
-        run: python -m pip install --upgrade pip setuptools wheel pyinstaller
-
-      - name: Install app dependencies
-        run: python -m pip install pyvjoy>=1.0.1 pynput>=1.7.6 ttkbootstrap>=1.10.1
-
-      - name: Clone vgamepad
-        run: git clone --depth 1 https://github.com/yannbouteiller/vgamepad.git .\_deps\vgamepad
-
-      - name: Install vgamepad
-        run: python .\_deps\vgamepad\setup.py install
-
-      - name: Install Inno Setup
-        run: choco install innosetup --no-progress -y
-
-      - name: Build app bundle and installer
-        run: .\build-release.ps1 -SkipDependencyInstall
-
-      - name: Create portable zip
-        run: Compress-Archive -Path .\dist\KeytoXboxPS\* -DestinationPath .\dist\KeytoXboxPS-portable.zip -Force
-
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: KeytoXboxPS-release
-          path: |
-            dist\installer\KeytoXboxPS-Setup.exe
-            dist\KeytoXboxPS-portable.zip
-
-      - name: Publish GitHub release assets
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v2
-        with:
-          files: |
-            dist\installer\KeytoXboxPS-Setup.exe
-            dist\KeytoXboxPS-portable.zip
+      - name: Stop automated CI build
+        run: |
+          Write-Host "Automated Windows release builds are disabled."
+          Write-Host "Reason: vgamepad installation is not reliable on GitHub-hosted Windows runners."
+          Write-Host "Build the installer locally on Windows, then upload release assets manually."
