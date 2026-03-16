@@ -5,6 +5,7 @@ from __future__ import annotations
 import ctypes
 import json
 import logging
+import os
 from queue import Empty, Queue
 import sys
 import tkinter as tk
@@ -78,6 +79,9 @@ UI_THEME_OPTIONS = {
 LIGHT_THEME_NAME = "flatly"
 DARK_THEME_NAME = "darkly"
 DARK_THEME_ACCENT = "#36B7BA"
+APP_NAME = "KeytoXboxPS"
+APP_VERSION = "1.0.0"
+APP_USER_MODEL_ID = "KeytoXboxPS.App"
 
 DEFAULT_CONFIG: Dict[str, Any] = {
     "backend": "xinput",
@@ -867,7 +871,7 @@ class KeytoXboxPSApp:
         theme_name = DARK_THEME_NAME if self.config.get("ui_theme") == "dark" else LIGHT_THEME_NAME
         # Helps Windows use our app-specific icon in taskbar/titlebar reliably.
         try:
-            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("KeytoXboxPS.App")
+            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(APP_USER_MODEL_ID)
         except Exception:
             pass
         root = ttk.Window(themename=theme_name)
@@ -1052,15 +1056,28 @@ class KeytoXboxPSApp:
             print(message, file=sys.stderr)
 
 
-def main() -> int:
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
+def get_app_data_dir() -> Path:
+    local_app_data = os.environ.get("LOCALAPPDATA")
+    if local_app_data:
+        return Path(local_app_data) / APP_NAME
+    return Path.home() / "AppData" / "Local" / APP_NAME
+
+
+def resolve_runtime_paths() -> tuple[Path, Path]:
     if getattr(sys, "frozen", False):
-        config_dir = Path(sys.executable).resolve().parent
-        resource_dir = Path(getattr(sys, "_MEIPASS", config_dir))
+        config_dir = get_app_data_dir()
+        resource_dir = Path(getattr(sys, "_MEIPASS", Path(sys.executable).resolve().parent))
     else:
         config_dir = Path(__file__).resolve().parent
         resource_dir = config_dir
 
+    config_dir.mkdir(parents=True, exist_ok=True)
+    return config_dir, resource_dir
+
+
+def main() -> int:
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
+    config_dir, resource_dir = resolve_runtime_paths()
     app = KeytoXboxPSApp(config_dir / "config.json", resource_dir / "assets")
     try:
         return app.run()

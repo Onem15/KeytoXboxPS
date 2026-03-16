@@ -54,7 +54,10 @@ python main.py
 
 ## Config
 
-File: `config.json`
+File:
+
+- Source run: `.\config.json`
+- Installed app: `%LOCALAPPDATA%\KeytoXboxPS\config.json`
 
 Important fields:
 
@@ -64,17 +67,50 @@ Important fields:
 - `bindings.axes`
 - `bindings.buttons`
 
-## Build EXE
+## Build App Bundle
 
 ```powershell
-pip install pyinstaller
-pyinstaller --noconfirm --clean --onefile --windowed --collect-all vgamepad --collect-all ttkbootstrap --add-data "assets\icon-KeytoXboxPS.png;assets" --add-data "assets\icon-KeytoXboxPS.ico;assets" --icon "assets\icon-KeytoXboxPS.ico" --name KeytoXboxPS main.py
-Copy-Item -Force .\config.json .\dist\config.json
+pip install -r requirements.txt pyinstaller
+pyinstaller --noconfirm --clean KeytoXboxPS.spec
 ```
 
 Output:
 
-- `dist\KeytoXboxPS.exe`
+- `dist\KeytoXboxPS\KeytoXboxPS.exe`
+
+## Build Installer
+
+Requirements:
+
+- Python
+- Inno Setup 6 (`iscc` on `PATH`)
+
+Command:
+
+```powershell
+.\build-release.ps1
+```
+
+Outputs:
+
+- App bundle: `dist\KeytoXboxPS\`
+- Installer: `dist\installer\KeytoXboxPS-Setup.exe`
+
+## Windows Trust / SmartScreen
+
+An installer does **not** stop Windows from showing "unknown app" or "make sure you trust this app" prompts by itself.
+
+To reduce or eliminate those warnings in real-world distribution you need:
+
+1. A valid **code-signing certificate** from a trusted CA.
+2. To sign **both** `KeytoXboxPS.exe` and `KeytoXboxPS-Setup.exe`.
+3. To build release reputation over time, or use an **EV code-signing certificate** for faster SmartScreen trust.
+
+Practical notes:
+
+- Unsigned PyInstaller executables are commonly flagged as suspicious.
+- `onefile` and UPX-compressed builds are more likely to trigger heuristics than a normal installed `onedir` app.
+- This project now uses an installer-friendly `onedir` build and disables UPX to reduce false positives, but code signing is still required for proper trust.
 
 ## Notes
 
