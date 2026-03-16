@@ -1,13 +1,32 @@
 # -*- mode: python ; coding: utf-8 -*-
+from pathlib import Path
+import sys
+
 from PyInstaller.utils.hooks import collect_all
 
 datas = [('assets\\icon-KeytoXboxPS.png', 'assets'), ('assets\\icon-KeytoXboxPS.ico', 'assets')]
 binaries = []
-hiddenimports = []
+hiddenimports = [
+    '_tkinter',
+]
 tmp_ret = collect_all('vgamepad')
 datas += tmp_ret[0]; binaries += tmp_ret[1]; hiddenimports += tmp_ret[2]
 tmp_ret = collect_all('ttkbootstrap')
 datas += tmp_ret[0]; binaries += tmp_ret[1]; hiddenimports += tmp_ret[2]
+
+python_base = Path(sys.base_prefix)
+tk_root = python_base / 'tcl'
+for dll_name in ('tcl86t.dll', 'tk86t.dll'):
+    dll_path = python_base / 'DLLs' / dll_name
+    if dll_path.exists():
+        binaries.append((str(dll_path), '.'))
+for folder_name, target_name in (('tcl8.6', '_tcl_data'), ('tk8.6', '_tk_data')):
+    folder_path = tk_root / folder_name
+    if folder_path.exists():
+        datas.append((str(folder_path), target_name))
+module_dir = tk_root / 'tcl8'
+if module_dir.exists():
+    datas.append((str(module_dir), 'tcl8'))
 
 
 a = Analysis(
@@ -16,9 +35,9 @@ a = Analysis(
     binaries=binaries,
     datas=datas,
     hiddenimports=hiddenimports,
-    hookspath=[],
+    hookspath=['hooks'],
     hooksconfig={},
-    runtime_hooks=[],
+    runtime_hooks=['pyi_rth_tk_paths.py'],
     excludes=[],
     noarchive=False,
     optimize=0,
